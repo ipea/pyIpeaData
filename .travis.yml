@@ -7,4 +7,4 @@ install:
 # command to run tests
 script:
   - pylint ipeadata/ipeadata.py
-  - python -m unittest ipedata/tests/test_api.py
+  - python -m unittest ipeadata/tests/test_api.py
