@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 from os import path, listdir
 
 here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.rst')) as f:
+with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='IpeaData',
-    version='0.0.1',
+    name='ipeaData',
+    version='0.0.2',
     packages=find_packages(exclude=["ipedata.tests"]),
     url='https://github.com/ipea/pyIpeaData',
     author='Gustavo Coelho',
@@ -25,7 +25,7 @@ setup(
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
+        'Topic :: Internet :: WWW/HTTP',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.

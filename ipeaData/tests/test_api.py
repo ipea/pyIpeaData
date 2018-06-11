@@ -1,4 +1,4 @@
-from ipeadata.ipeadata import *
+from ipeaData.ipeadata import *
 import unittest
 
 class TestApi(unittest.TestCase):
