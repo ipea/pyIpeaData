@@ -7,15 +7,17 @@ with open(path.join(here, 'README.md')) as f:
 
 setup(
     name='ipeaData',
-    version='0.0.2',
+    version='0.0.4',
     packages=find_packages(exclude=["ipedata.tests"]),
     url='https://github.com/ipea/pyIpeaData',
     author='Gustavo Coelho',
     author_email='gutorc@hotmail.com',
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=long_description,
-    keywords='uri',
+    long_description_content_type="text/markdown",
+    keywords='ipea',
     install_requires=['requests', 'pandas'],
+    include_package_data=True,
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
