@@ -1,12 +1,12 @@
 # pyIpeaData 
 
-# Install 
+## Install 
 
 ```
 pip install ipeaData
 ```
 
-# Use
+## Use
 
 ```
 from ipeaData.ipeadata import ipeadata
