@@ -1,1 +1,15 @@
-# pyIpeaData [![Build Status](https://travis-ci.org/ipea/pyIpeaData.svg?branch=master)](https://travis-ci.org/ipea/pyIpeaData)
+# pyIpeaData 
+
+# Install 
+
+```
+pip install ipeaData
+```
+
+# Use
+
+```
+from ipeaData.ipeadata import ipeadata
+
+ipeadata('ADMIS')
+```
