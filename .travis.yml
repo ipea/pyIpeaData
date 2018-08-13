@@ -6,5 +6,5 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
-  - pylint ipeadata/ipeadata.py
+  - pylint ipeaData/ipeadata.py
   - coverage run --source=. -m unittest discover -s test

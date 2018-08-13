@@ -40,7 +40,13 @@ def get_metadata(serie=None):
 
 
 def get_nivel_region(serie):
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('%s')/Valores?$apply=groupby((NIVNOME))&$orderby=NIVNOME" % serie
+    """
+    Return region nivel of a serie
+    :param serie: serie to search for
+    :return: a data frame
+    """
+    api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{}')"
+           "/Valores?$apply=groupby((NIVNOME))&$orderby=NIVNOME").format(serie)
     return basic_api_call(api)
 
 # pylint: disable=invalid-name
@@ -53,10 +59,11 @@ def ipeadata(serie, groupby=None):
     if groupby is not None:
         df = get_nivel_region(serie)
         if df['NIVNOME'].isin([groupby]).any():
-            api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip=0&$orderby=SERATUALIZACAO&$count=true".format(serie, groupby)
+            api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors"
+                   "(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip=0&$orderby"
+                   "=SERATUALIZACAO&$count=true").format(serie, groupby)
             return basic_api_call(api)
-        else:
-            return None
+        return None
     api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % serie
     return basic_api_call(api)
 
