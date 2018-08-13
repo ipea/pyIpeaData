@@ -38,13 +38,32 @@ def get_metadata(serie=None):
     api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados%s" % url_final
     return basic_api_call(api)
 
+
+def get_nivel_region(serie):
+    """
+    Return region nivel of a serie
+    :param serie: serie to search for
+    :return: a data frame
+    """
+    api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{}')"
+           "/Valores?$apply=groupby((NIVNOME))&$orderby=NIVNOME").format(serie)
+    return basic_api_call(api)
+
 # pylint: disable=invalid-name
-def ipeadata(serie):
+def ipeadata(serie, groupby=None):
     """
     Return the values from a given serie
     :param serie: a serie to search for
     :return: a data frame with the values
     """
+    if groupby is not None:
+        df = get_nivel_region(serie)
+        if df['NIVNOME'].isin([groupby]).any():
+            api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors"
+                   "(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip=0&$orderby"
+                   "=SERATUALIZACAO&$count=true").format(serie, groupby)
+            return basic_api_call(api)
+        return None
     api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % serie
     return basic_api_call(api)
 
