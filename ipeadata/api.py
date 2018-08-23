@@ -7,7 +7,7 @@ def basic_api_call(url):
     """
     Calls IpeaData API.
 
-    :param url: URL
+    :param url: (str) URL
 
     :return: DataFrame with requested data
     :rtype: pandas DataFrame
