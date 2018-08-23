@@ -6,7 +6,7 @@ with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='ipeaData',
+    name='ipeadata',
     version='0.0.4',
     packages=find_packages(exclude=["ipedata.tests"]),
     url='https://github.com/ipea/pyIpeaData',
