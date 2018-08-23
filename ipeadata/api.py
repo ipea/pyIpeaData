@@ -60,6 +60,7 @@ def get_metadata(id=None):
     id = "('%s')" % id if id is not None else ''
     return basic_api_call("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados%s" % id)
 
+
 def get_region_level(id):
     """
     Returns region level for the given time series.
