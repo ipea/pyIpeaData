@@ -46,17 +46,19 @@ def get_sources():
     return basic_api_call("http://ipeadata2-homologa.ipea.gov.br/api/v1/Fontes")
 
 
-def get_metadata(id):
+def get_metadata(id=None):
     """
     Returns metadata for the given time series.
+
+    If no `id` parameter is passed, it returns metadata for all the time series in IpeaData.
 
     :param id: (str) time series id
 
     :return: Metadata for the given time series
     :rtype: pandas DataFrame
     """
-    return basic_api_call("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('%s')" % id)
-
+    id = "('%s')" % id if id is not None else ''
+    return basic_api_call("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados%s" % id)
 
 def get_region_level(id):
     """

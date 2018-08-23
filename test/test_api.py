@@ -19,6 +19,7 @@ class TestApi(unittest.TestCase):
 
     def test_get_metadata(self):
         self.assertIsNotNone(get_metadata('ADMIS'))
+        self.assertIsNotNone(get_metadata())
 
     def test_get_region(self):
         df = get_region_level('QUANTLEITE')
