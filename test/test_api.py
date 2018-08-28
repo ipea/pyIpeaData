@@ -1,4 +1,4 @@
-from ipeadata.api import *
+from ipeaData.ipeadata import *
 import unittest
 
 
