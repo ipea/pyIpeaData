@@ -3,70 +3,94 @@ import requests as req
 import pandas as pd
 
 
-def basic_api_call(api):
+def basic_api_call(url):
     """
-    Function to make a call on ipedata api
-    :param api: url on api
-    :return: a dataFrame with data
+    Calls IpeaData API.
+
+    :param url: (str) URL
+
+    :return: DataFrame with requested data
+    :rtype: pandas DataFrame
     """
-    response = req.get(api)
-    if response.status_code == req.codes.ok: # pylint: disable=no-member
+    response = req.get(url)
+
+    if response.status_code == req.codes.ok:  # pylint: disable=no-member
+
         json_response = response.json()
         if 'value' in json_response:
-            try:
-                data_frame = pd.DataFrame(json_response['value'])
-                return data_frame
-            except Exception: # pylint: disable=broad-except
-                return None
+
+            df = pd.DataFrame(json_response['value'])
+
+            # Raises an error if the DataFrame is empty
+            if df.empty:
+                raise FileNotFoundError('We were unable to find data according to the input parameters.')
+
+            return df
+
     return None
+
 
 def get_sources():
     """
-    Get sources from ipea web site
-    :return: a data frame with the information
-    """
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Fontes"
-    return basic_api_call(api)
+    Lists sources from IpeaData containing the following fields:
 
-def get_metadata(serie=None):
+    1. FNTID: <FILL EXPLANATION>
+    2. FNTSIGLA: <FILL EXPLANATION>
+    3. MACRO: <FILL EXPLANATION>
+    4. REGIONAL: <FILL EXPLANATION>
+    5. SOCIAL: <FILL EXPLANATION>
+
+    :return: DataFrame with sources attributes
+    :rtype: pandas DataFrame
     """
-    Return metadata of a serie
-    :param serie: serie to search for otherwise return metadata for all series
-    :return: a data frame
-    """
-    url_final = "('%s')" % serie if serie is not None else ''
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados%s" % url_final
-    return basic_api_call(api)
+    return basic_api_call("http://ipeadata2-homologa.ipea.gov.br/api/v1/Fontes")
 
 
-def get_nivel_region(serie):
+def get_metadata(id=None):
     """
-    Return region nivel of a serie
-    :param serie: serie to search for
-    :return: a data frame
+    Returns metadata for the given time series.
+
+    If no `id` parameter is passed, it returns metadata for all the time series in IpeaData.
+
+    :param id: (str) time series id
+
+    :return: Metadata for the given time series
+    :rtype: pandas DataFrame
     """
-    api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{}')"
-           "/Valores?$apply=groupby((NIVNOME))&$orderby=NIVNOME").format(serie)
-    return basic_api_call(api)
+    id = "('%s')" % id if id is not None else ''
+    return basic_api_call("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados%s" % id)
+
+
+def get_region_level(id):
+    """
+    Returns region level for the given time series.
+
+    :param id: (str) time series id
+
+    :return: Region level of a time series
+    :rtype: pandas DataFrame
+    """
+    url = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{}')/Valores?$apply=groupby((NIVNOME))&$orderby=NIV"
+           "NOME").format(id)
+    return basic_api_call(url)
+
 
 # pylint: disable=invalid-name
-def ipeadata(serie, groupby=None):
+def get_data(id, groupby=None):
     """
-    Return the values from a given serie
-    :param serie: a serie to search for
-    :return: a data frame with the values
+    Returns data corresponding to the given time series.
+
+    :param id: (str) time series id
+
+    :return: Data for the given time series
+    :rtype: pandas DataFrame
     """
     if groupby is not None:
-        df = get_nivel_region(serie)
+        df = get_region_level(id)
         if df['NIVNOME'].isin([groupby]).any():
-            api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors"
-                   "(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip=0&$orderby"
-                   "=SERATUALIZACAO&$count=true").format(serie, groupby)
-            return basic_api_call(api)
+            url = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip="
+                   "0&$orderby=SERATUALIZACAO&$count=true").format(id, groupby)
+            return basic_api_call(url)
         return None
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % serie
-    return basic_api_call(api)
-
-
-if __name__ == "__main__":
-    print(ipeadata('ADMIS'))
+    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % id
+    return basic_api_call(url)
